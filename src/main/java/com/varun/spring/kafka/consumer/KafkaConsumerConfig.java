@@ -1,23 +1,26 @@
 package com.varun.spring.kafka.consumer;
 
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
+import org.springframework.kafka.core.ConsumerFactory;
 
-@Service
+/**
+ * This class is NEEDED ONLY WHEN YOU WANT TO FILTER
+ */
+@Configuration
 public class KafkaConsumerConfig {
-
-    @KafkaListener(topics = "mySpringTopic")
-    public void recieveMessage(String message,
-                               @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
-                               @Header(KafkaHeaders.OFFSET) int offset){
-        StringBuilder sb = new StringBuilder();
-        sb.append("Offset: ").append(offset).append(" Partition:").append(partition).append(" with Message:").append(message);
-
-        System.out.println("Recieved: " + sb.toString());
-
-
-
+    @Autowired
+    private ConsumerFactory consumerFactory;
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<Integer, String> createFilterConsumerFactory(){
+        ConcurrentKafkaListenerContainerFactory<Integer, String> factory =
+                new ConcurrentKafkaListenerContainerFactory<>();
+        factory.setConsumerFactory(consumerFactory);
+        factory.setRecordFilterStrategy(
+                record -> record.key()%2==0); //leave out all even numbers
+        return factory;
     }
+
 }

@@ -1,11 +1,9 @@
 This project handles Kafka Producer and Consumer from Spring Boot. It has a command Line Runner that launches a producer and produces a message every second. The Consumer also starts up with listening on same topic. 
-This demo shows 
-  the Producer Configuration through Beans that set up a Producer Factory and Kafka Template . It also can inject multiple "NewTopic" objects corresponding to all the topics that you'd want to "auto create" or join if they are created. 
-   the Producer, which injects KafkaTemplate and sends messages (its threadsafe by Spring)
-   
-   The Consumer Configuration that sets up a Listener for 1 or more topics, and sets up consumber group ID as well to handle multiple partitions.
-   
-There are examples in Branch "PropertyConfigs" to push some of the configs over to properties file
+This demo shows
+ In Advanced ,
+ 1) Test one is to have 2 consumers on same topic and same consumer group . it works by rebalancing partitions between the 2 consumers as expected
+ 2) Test 2 is to Filter the messages. In this case the offset still moves forward, just that consumer does not handle the message.
+    Also, we need consumerConfig in this case, all other cases we were able to handle through properties
+ 3) Test 3 is to have one consumer subscribe to specifically 1 or multiple partitions and start from offsets
 
-and "Advanced" which shows some of the more complex examples
 
