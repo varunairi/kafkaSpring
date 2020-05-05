@@ -1,5 +1,6 @@
 package com.varun.spring.kafka.producer;
 
+import com.varun.spring.kafka.vo.Student;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -9,9 +10,9 @@ import org.springframework.util.concurrent.ListenableFuture;
 @Service
 public class KafkaSender {
 
-    private KafkaTemplate<Integer,String> template;
+    private KafkaTemplate<Integer,Student> template;
     @Autowired
-    public void setTemplate(KafkaTemplate<Integer, String> template)
+    public void setTemplate(KafkaTemplate<Integer, Student> template)
     {this.template = template;}
 
     public void sendMessage(String message){
@@ -24,7 +25,8 @@ public class KafkaSender {
             }
             System.out.println("Sending Message: ");
             //Add Listenable Future to get notified. Also in other examples I was not sneding key
-            ListenableFuture<SendResult<Integer, String>> future = template.send("mySpringTopic",i,message + " " + i);
+            ListenableFuture<SendResult<Integer, Student>> future = template.send("mySpringTopic",i,
+                    new Student(message + " " + i,"BCOM"));
 
             future.addCallback(s ->System.out.println("Success" + s.getProducerRecord().partition()), f->
                 System.out.println("Failure" + f.getLocalizedMessage()));

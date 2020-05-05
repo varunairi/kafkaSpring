@@ -1,5 +1,6 @@
 package com.varun.spring.kafka.consumer;
 
+import com.varun.spring.kafka.vo.Student;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.PartitionOffset;
 import org.springframework.kafka.annotation.TopicPartition;
@@ -10,8 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaConsumer {
 
-    @KafkaListener(topics = "mySpringTopic",
-    containerFactory = "createFilterConsumerFactory")
+    @KafkaListener(topics = "mySpringTopic")
     /*@KafkaListener(
             topicPartitions = @TopicPartition(topic = "topicName",
                     partitionOffsets = {
@@ -20,12 +20,14 @@ public class KafkaConsumer {
                     }))*/
     /*@KafkaListener(topicPartitions
             = @TopicPartition(topic = "topicName", partitions = { "0", "1" }))*/
-    public void recieveMessage(String message,
+    public void recieveMessage(Student message,
                                @Header(KafkaHeaders.RECEIVED_PARTITION_ID) int partition,
                                @Header(KafkaHeaders.OFFSET) int offset){
         StringBuilder sb = new StringBuilder();
         sb.append("Listener 2: Offset: ").append(offset).append(" Partition:").append(partition).append(" with Message:").append(message);
 
         System.out.println("Received: " + sb.toString());
+
+
     }
 }
